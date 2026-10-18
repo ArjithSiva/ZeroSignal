@@ -1,0 +1,38 @@
+{
+  "name": "@zerosignal/server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ZeroSignal control plane: auth, broadcasts, emergency messages, AI, metrics, adaptive decisions, analytics and Socket.IO.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "node --watch --env-file-if-exists=.env src/index.js",
+    "start": "node --env-file-if-exists=.env src/index.js",
+    "seed": "node --env-file-if-exists=.env src/seed/run.js seed",
+    "seed:clean": "node --env-file-if-exists=.env src/seed/run.js clean",
+    "test": "vitest run",
+    "media:hls": "node --env-file-if-exists=.env scripts/hls-ladder.mjs",
+    "admin:create": "node --env-file-if-exists=.env src/seed/createAdmin.js"
+  },
+  "dependencies": {
+    "@node-rs/argon2": "^2.2.2",
+    "@zerosignal/shared": "*",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "livekit-server-sdk": "^2.19.1",
+    "mongoose": "^8.9.5",
+    "nodemailer": "^10.1.1",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^10.1.4",
+    "socket.io-client": "^4.8.1",
+    "supertest": "^7.0.0"
+  }
+}

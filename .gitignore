@@ -1,0 +1,22 @@
+node_modules/
+dist/
+build/
+coverage/
+
+# secrets — never commit
+.env
+.env.*
+!.env.example
+
+# logs / OS / editor
+*.log
+npm-debug.log*
+.DS_Store
+.vscode/
+.idea/
+
+# generated keys
+server/.keys/
+
+# local seed credentials — never commit
+SEED_CREDENTIALS.local.md

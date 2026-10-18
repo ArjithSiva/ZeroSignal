@@ -1,0 +1,14 @@
+{
+  "name": "@zerosignal/shared",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ZeroSignal adaptive engine, signal intelligence scores and trend predictor. Pure JS, no React/Express coupling — used identically by client and server.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "test": "vitest run"
+  }
+}

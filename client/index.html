@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#070b14" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="description" content="ZeroSignal — adaptive emergency broadcasting. When networks fail, information shouldn't." />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <script>
+      /* Apply the saved theme before first paint (no flash). Mirrors src/lib/theme.js. */
+      (function () {
+        try {
+          var m = localStorage.getItem('zerosignal.theme');
+          var dark = m === 'dark' || (m !== 'light' && (!window.matchMedia || matchMedia('(prefers-color-scheme: dark)').matches));
+          var r = document.documentElement, t = dark ? 'dark' : 'light';
+          r.dataset.theme = t; r.style.colorScheme = t;
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#070b14' : '#f3f6fb');
+          if (!dark) document.querySelector('link[rel="manifest"]').setAttribute('href', '/manifest-light.webmanifest');
+        } catch (e) {}
+      })();
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&display=swap" rel="stylesheet" />
+    <title>ZeroSignal — adaptive emergency broadcasting</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>ZeroSignal needs JavaScript. When networks fail, information shouldn't — but this page can't run without it.</noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

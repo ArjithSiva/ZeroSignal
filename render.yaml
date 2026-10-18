@@ -1,0 +1,65 @@
+# Render blueprint for the API (free tier, no shell needed).
+#
+# IMPORTANT — Root Directory: leave it EMPTY (the repository root). The API imports the `shared/`
+# package, and Render does not make files outside a service's Root Directory available at build or
+# run time, so setting it to `server` would break the install. The commands below scope the work to
+# the two folders the API needs.
+#
+# Create it with: New → Blueprint → select this repo, or copy these values into New → Web Service.
+services:
+  - type: web
+    name: zerosignal-api
+    runtime: node
+    plan: free
+    buildCommand: npm ci --omit=dev --workspace=shared --workspace=server
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: MONGODB_URI
+        sync: false          # paste your Atlas connection string
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ALERT_SIGNING_SEED
+        sync: false          # 64 hex chars: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+      - key: CLIENT_ORIGINS
+        sync: false          # your Vercel URL, e.g. https://zerosignal.vercel.app (no trailing slash)
+      - key: APP_BASE_URL
+        sync: false          # your Vercel URL (links in setup / reset emails)
+      # ── first admin without a shell: the one-time setup link is printed in Render → Logs ──
+      - key: BOOTSTRAP_ADMIN_EMAIL
+        sync: false
+      - key: BOOTSTRAP_ADMIN_NAME
+        sync: false
+      # ── optional pre-loaded sample history, loaded once on first boot ──
+      - key: SEED_ON_BOOT
+        value: "false"       # set to true for a showcase deployment
+      - key: SEED_EMAIL_DOMAIN
+        value: responders.example.org
+      - key: GROQ_API_KEY
+        sync: false          # optional; empty = labelled rule-based fallback
+      # console = links go to the Render log (works with no email provider). smtp = real email (needs SMTP_URL).
+      - key: MAIL_TRANSPORT
+        value: console
+      - key: SMTP_URL
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: COOKIE_SAMESITE
+        value: lax           # the Vercel /api rewrite makes the cookie first-party
+      # Every visitor reaches the API through Vercel's proxy, so they share a few source IPs.
+      - key: RATE_LIMIT_AUTH_MAX
+        value: "60"
+      - key: LIVEKIT_URL
+        sync: false          # optional: real WebRTC streaming (free cloud tier)
+      - key: LIVEKIT_API_KEY
+        sync: false
+      - key: LIVEKIT_API_SECRET
+        sync: false
+      - key: HLS_BASE_URL
+        sync: false          # optional; HLS needs FFmpeg, which Render's native Node runtime does not include

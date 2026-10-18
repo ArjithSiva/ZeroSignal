@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+/*
+ * ZeroSignal design tokens.
+ *
+ * Every colour in the app is a semantic token defined here, once per theme. Components never pick a
+ * theme-specific colour: they use utilities such as bg-canvas, text-muted, border-line, text-success
+ * (or var(--color-*) in SVG / canvas / charts). A theme is just a different set of values.
+ *
+ *   :root, [data-theme="dark"]   the operations-centre dark theme (default values)
+ *   [data-theme="light"]         crisp light theme: same identity, same cyan, same status meanings
+ *
+ * The attribute can sit on any element, so a surface that must stay dark in a light page (the
+ * full-screen CRITICAL takeover, a video frame) just carries data-theme="dark".
+ *
+ * `@theme static` makes Tailwind emit every variable (not only the ones utilities use), because
+ * JavaScript reads some of them directly (e.g. var(--color-tier-480) in charts).
+ *
+ * Contrast: status colours used as TEXT meet WCAG AA (4.5:1) on canvas, surface and raised in both
+ * themes. tests/theme.contrast.test.js parses this file and enforces it.
+ */
+@theme static {
+  --color-canvas: #070b14;
+  --color-surface: #0d1422;
+  --color-raised: #121b2e;
+  --color-ink: #f8fafc;
+  --color-muted: #94a3b8;
+  --color-faint: #8494aa;
+  --color-line: rgb(148 163 184 / 0.16);
+  --color-line-soft: rgb(148 163 184 / 0.08);
+  --color-line-strong: rgb(148 163 184 / 0.32);
+
+  --color-primary: #22d3ee;
+  --color-on-primary: #04121a;
+  --color-accent: #a78bfa;
+
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-critical: #ef4444;
+  /* solid button fills (white text on top) */
+  --color-critical-fill: #dc2626;
+  --color-success-fill: #15803d;
+  --color-on-status: #070b14;
+  --color-critical-soft: #fecaca;
+  --color-warning-soft: #fde68a;
+
+  --color-tier-480: #4ade80;
+  --color-tier-240: #a3e635;
+  --color-tier-text: #fb923c;
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Instrument Sans", "Noto Sans Tamil", "Noto Sans Devanagari", "Noto Sans Telugu", ui-sans-serif, system-ui, sans-serif;
+
+  --animate-pulse-ring: pulse-ring 1.8s ease-out infinite;
+  --animate-siren: siren 1s steps(2, jump-none) infinite;
+}
+
+/* Non-colour tokens that also change per theme. */
+:root, [data-theme="dark"] {
+  color-scheme: dark;
+  --glass-bg: rgb(13 20 34 / 0.72);
+  --glass-shadow: none;
+  --page-glow-1: rgb(34 211 238 / 0.08);
+  --page-glow-2: rgb(239 68 68 / 0.05);
+  --scrim: rgb(0 0 0 / 0.6);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --color-canvas: #f3f6fb;
+  --color-surface: #ffffff;
+  --color-raised: #e9eef6;
+  --color-ink: #0b1324;
+  --color-muted: #46556b;
+  --color-faint: #5b6b82;
+  --color-line: rgb(15 23 42 / 0.13);
+  --color-line-soft: rgb(15 23 42 / 0.07);
+  --color-line-strong: rgb(15 23 42 / 0.32);
+
+  /* the cyan identity is kept; it is deepened where it must carry text */
+  --color-primary: #0e7490;
+  --color-on-primary: #ffffff;
+  --color-accent: #6d28d9;
+
+  --color-success: #137137;
+  --color-warning: #a14a09;
+  --color-critical: #b91c1c;
+  --color-critical-fill: #b91c1c;
+  --color-success-fill: #15803d;
+  --color-on-status: #ffffff;
+  --color-critical-soft: #fecaca;
+  --color-warning-soft: #fde68a;
+
+  --color-tier-480: #166534;
+  --color-tier-240: #44700d;
+  --color-tier-text: #a54a08;
+
+  --glass-bg: rgb(255 255 255 / 0.92);
+  --glass-shadow: 0 1px 2px rgb(15 23 42 / 0.06), 0 10px 28px -8px rgb(15 23 42 / 0.12);
+  --page-glow-1: rgb(14 116 144 / 0.07);
+  --page-glow-2: rgb(185 28 28 / 0.035);
+  --scrim: rgb(11 19 36 / 0.45);
+}
+
+/* Operating-system "increase contrast" setting: stronger lines and text in both themes. */
+@media (prefers-contrast: more) {
+  :root, [data-theme="dark"] { --color-line: rgb(203 213 225 / 0.5); --color-line-soft: rgb(203 213 225 / 0.25); --color-muted: #cbd5e1; --color-faint: #cbd5e1; }
+  [data-theme="light"] { --color-line: rgb(15 23 42 / 0.55); --color-line-soft: rgb(15 23 42 / 0.3); --color-muted: #1e293b; --color-faint: #1e293b; }
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+  80%, 100% { box-shadow: 0 0 0 8px transparent; opacity: 1; }
+}
+@keyframes siren {
+  0% { background-color: rgb(127 29 29 / 0.97); }
+  100% { background-color: rgb(69 10 10 / 0.985); }
+}
+
+html { background: var(--color-canvas); }
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background:
+    radial-gradient(1100px 520px at 12% -10%, var(--page-glow-1), transparent 60%),
+    radial-gradient(900px 480px at 100% 0%, var(--page-glow-2), transparent 55%),
+    var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "tnum" 1, "cv11" 1;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, .font-display { font-family: var(--font-display); letter-spacing: -0.02em; }
+
+/* Panels: thin-bordered; frosted in dark, crisp with a soft shadow in light. */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--color-line);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+}
+[data-theme="light"] .glass { backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+.num { font-variant-numeric: tabular-nums; }
+
+/* Visible keyboard focus everywhere. */
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-radius: 6px; }
+
+kbd { border: 1px solid var(--color-line-strong); border-radius: 5px; padding: 0 5px; font-size: 11px; }
+
+/* Scrollbars that match. */
+* { scrollbar-width: thin; scrollbar-color: var(--color-line-strong) transparent; }
+
+/*
+ * Easy-read mode (low literacy / low vision): bigger type, maximum contrast, bold borders.
+ * It composes with the theme: black-on-white in light, white-on-black in dark.
+ */
+html[data-a11y="on"] { font-size: 19px; }
+html[data-a11y="on"] [data-theme="dark"], html[data-a11y="on"][data-theme="dark"] {
+  --color-canvas: #000; --color-surface: #000; --color-raised: #0a0a0a; --color-ink: #fff; --color-muted: #d1d9e4; --color-faint: #d1d9e4;
+  --color-line: rgb(248 250 252 / 0.55); --color-line-soft: rgb(248 250 252 / 0.3); --glass-bg: #000;
+}
+html[data-a11y="on"] [data-theme="light"], html[data-a11y="on"][data-theme="light"] {
+  --color-canvas: #fff; --color-surface: #fff; --color-raised: #f1f5f9; --color-ink: #000; --color-muted: #1e293b; --color-faint: #1e293b;
+  --color-line: rgb(0 0 0 / 0.6); --color-line-soft: rgb(0 0 0 / 0.35); --glass-bg: #fff; --glass-shadow: none;
+}
+html[data-a11y="on"] .glass { backdrop-filter: none; border-width: 2px; }
+html[data-a11y="on"] body { background: var(--color-canvas); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
+
+/* Printed incident report: always light, regardless of theme (also forced by theme.js on beforeprint). */
+@media print {
+  html, body { background: #fff !important; color: #000 !important; }
+  .no-print { display: none !important; }
+  .glass { background: #fff !important; border-color: #ccc !important; box-shadow: none !important; backdrop-filter: none; }
+  .text-muted, .text-ink, .text-faint { color: #000 !important; }
+}

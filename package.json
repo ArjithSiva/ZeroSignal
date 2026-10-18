@@ -1,0 +1,28 @@
+{
+  "name": "zerosignal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ZeroSignal \u2014 adaptive emergency broadcasting for unreliable networks. When networks fail, information shouldn't.",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "concurrently -n server,client -c cyan,magenta \"npm run dev -w server\" \"npm run dev -w client\"",
+    "start": "npm run start -w server",
+    "seed": "npm run seed -w server --",
+    "seed:clean": "npm run seed:clean -w server --",
+    "test": "npm run test -w shared && npm run test -w server && npm run test -w client",
+    "build": "npm run build -w client",
+    "media:hls": "npm run media:hls -w server",
+    "admin:create": "npm run admin:create -w server --"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.5",
+    "vitest": "^2.1.9"
+  }
+}
